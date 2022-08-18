@@ -1,9 +1,14 @@
+import 'package:bmi/bmi_calculator.dart';
 import 'package:bmi/constants.dart';
+import 'package:bmi/screens/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../widgets/card.dart';
+import '../widgets/curcular_button.dart';
 import '../widgets/icon_content.dart';
+import '../widgets/long_button.dart';
+import '../widgets/number_controller_input.dart';
 
 const inactiveCardColor = Color(0xff1111328);
 const activeCardColor = Color(0xFF1D1E33);
@@ -19,6 +24,8 @@ enum GENDER { MALE, FEMALE }
 class _InputScreenState extends State<InputScreen> {
   GENDER? _selectedGender = null;
   int height = 180;
+  int weight = 75;
+  int age = 19;
 
   @override
   Widget build(BuildContext context) {
@@ -111,26 +118,41 @@ class _InputScreenState extends State<InputScreen> {
           ),
           Expanded(
             child: Row(
-              children: const [
-                Expanded(child: AppCard()),
-                Expanded(child: AppCard())
+              children: [
+                Expanded(
+                  child: AppCard(
+                    child: NumberControllerInput(
+                      value: weight,
+                      label: "weight",
+                      onPressMinus: () => setState(() => weight--),
+                      onPressPlus: () => setState(() => weight++),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: AppCard(
+                    child: NumberControllerInput(
+                      value: age,
+                      label: "age",
+                      onPressMinus: () => setState(() => age--),
+                      onPressPlus: () => setState(() => age++),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
-          InkWell(
-            onTap: (() {
-              print("pressedddd");
-            }),
-            child: Ink(
-              color: Colors.red,
-              height: 80.0,
-              child: Center(
-                child: Text(
-                  "Calculatdge",
-                  style: TextStyle(fontSize: 22),
-                ),
-              ),
-            ),
+          LongButton(
+            label: 'Calculate',
+            onPress: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ResultScreen(
+                            bmiCalculator:
+                                BMICalculator(height: height, weight: weight),
+                          )));
+            },
           )
         ],
       ),
